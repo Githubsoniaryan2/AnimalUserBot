@@ -67,8 +67,8 @@ def inline_wrapper(func):
                 button = [
                     [
                         InlineKeyboardButton(
-                            "💥 Deploy Genius Userbot ✨",
-                            url=f"https://github.com/AdityaHalder/Genius-Userbot"
+                            "💥 Deploy Animal Userbot ✨",
+                            url=f"https://github.com/Githubsoniaryan2/AnimalUserBot"
                         )
                     ]
                 ]
@@ -78,11 +78,11 @@ def inline_wrapper(func):
                     results=[
                         (
                             InlineQueryResultPhoto(
-                                photo_url=f"https://telegra.ph/file/027283ee9defebc3298b8.png",
-                                title="🥀 Genius Userbot ✨",
-                                thumb_url=f"https://telegra.ph/file/027283ee9defebc3298b8.png",
-                                description=f"🌷 Deploy Your Own Genius-Userbot 🌿...",
-                                caption=f"<b>🥀 Welcome » To » Genius 🌷\n✅ Userbot {__version__} ✨...</b>",
+                                photo_url=f"https://te.legra.ph/file/ec19cf227791a167abedc.jpg",
+                                title="🥀 Animal Userbot ✨",
+                                thumb_url=f"https://te.legra.ph/file/ec19cf227791a167abedc.jpg",
+                                description=f"🌷 Deploy Your Own Animal-Userbot 🌿...",
+                                caption=f"<b>🥀 Welcome » To » Animal 🌷\n✅ Userbot {__version__} ✨...</b>",
                                 reply_markup=InlineKeyboardMarkup(button),
                             )
                         )
@@ -98,7 +98,7 @@ def inline_wrapper(func):
                             InlineQueryResultArticle(
                                 title="",
                                 input_message_content=InputTextMessageContent(
-                                    f"||**🥀 Please, Deploy Your Own Genius Userbot❗...\n\nRepo:** <i>https://github.com/AdityaHalder/Genius-Userbot/</i>||"
+                                    f"||**🥀 Please, Deploy Your Own Animal Userbot❗...\n\nRepo:** <i>https://github.com/Githubsoniaryan2/AnimalUserBot</i>||"
                                 ),
                             )
                         )
