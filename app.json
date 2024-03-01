@@ -1,5 +1,5 @@
 {
-    "name": "Genius-Userbot",
+    "name": "Animal-Userbot",
     "description": "Genius-Userbot is an advanced & powerful multi-featured Telegram userbot.",
     "logo": "https://graph.org/file/292b9dfe74532e7174fd2.png",
     "keywords": [
@@ -8,7 +8,7 @@
         "telegram-music-bot",
         "telegram-video-bot"
     ],
-    "repository": "https://github.com/AdityaHalder/Genius-Userbot",
+    "repository": "https://github.com/Githubsoniaryan2/AnimalUserBot",
     "stack": "container",
     "env": {
         "API_ID": {
