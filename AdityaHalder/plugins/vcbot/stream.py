@@ -1,7 +1,6 @@
 from asyncio.queues import QueueEmpty
 from pyrogram import filters
-from pytgcalls.exceptions import *
-from pytgcalls.types.calls import Call
+from pytgcalls.exceptions import GroupCallNotFound
 
 from ... import *
 from ...modules.mongo.streams import *
@@ -17,17 +16,15 @@ from ...modules.utilities.streams import *
 async def audio_stream(client, message):
     chat_id = message.chat.id
     aux = await eor(message, "**Processing ...**")
-    calls = await call.calls
-    chat_call = calls.get(chat_id)
     audio = (
         (
             message.reply_to_message.audio
             or message.reply_to_message.voice
         )
-        if message.reply_to_message else None
+        if message.reply_to_message
+        else None
     )
     type = "Audio"
-
     try:
         if audio:
             await aux.edit("Downloading ...")
@@ -45,31 +42,28 @@ async def audio_stream(client, message):
                 query = message.text.split(None, 1)[1]
             results = await get_result(query)
             file = results[0]
-
-        if chat_call:
-            status = chat_call.status
-            if status == Call.Status.IDLE:
+        try:
+            a = await call.get_call(chat_id)
+            if a.status == "not_playing":
                 stream = await run_stream(file, type)
-                await call.play(chat_id, stream)
+                await call.change_stream(chat_id, stream)
                 await aux.edit("Playing!")
-            elif (
-                status == Call.Status.PLAYING
-                or status == Call.Status.PAUSED
+            elif (a.status == "playing"
+                or a.status == "paused"
             ):
                 position = await queues.put(
                     chat_id, file=file, type=type
                 )
                 await aux.edit(f"Queued At {position}")
-        else:
+        except GroupCallNotFound:
             stream = await run_stream(file, type)
-            try:
-                await call.play(chat_id, stream)
-                await aux.edit("Playing!")
-            except NoActiveGroupCall:
-                return await aux.edit("No Active VC!")
+            await call.join_group_call(chat_id, stream)
+            await aux.edit("Playing!")
     except Exception as e:
-        print(e)
-        pass
+       print(f"Error: {e}")
+       return await aux.edit("**Please Try Again !**")
+    except:
+        return
 
 
 # Video Player
@@ -79,14 +73,13 @@ async def audio_stream(client, message):
 async def video_stream(client, message):
     chat_id = message.chat.id
     aux = await eor(message, "**Processing ...**")
-    calls = await call.calls
-    chat_call = calls.get(chat_id)
     video = (
         (
             message.reply_to_message.video
             or message.reply_to_message.document
         )
-        if message.reply_to_message else None
+        if message.reply_to_message
+        else None
     )
     type = "Video"
     try:
@@ -106,31 +99,29 @@ async def video_stream(client, message):
                 query = message.text.split(None, 1)[1]
             results = await get_result(query)
             file = results[0]
-
-        if chat_call:
-            status = chat_call.status
-            if status == Call.Status.IDLE:
+        try:
+            a = await call.get_call(chat_id)
+            if a.status == "not_playing":
                 stream = await run_stream(file, type)
-                await call.play(chat_id, stream)
+                await call.change_stream(chat_id, stream)
                 await aux.edit("Playing!")
-            elif (
-                status == Call.Status.PLAYING
-                or status == Call.Status.PAUSED
+            elif (a.status == "playing"
+                or a.status == "paused"
             ):
                 position = await queues.put(
                     chat_id, file=file, type=type
                 )
                 await aux.edit(f"Queued At {position}")
-        else:
+        except GroupCallNotFound:
             stream = await run_stream(file, type)
-            try:
-                await call.play(chat_id, stream)
-                await aux.edit("Playing!")
-            except NoActiveGroupCall:
-                return await aux.edit("No Active VC!")
+            await call.join_group_call(chat_id, stream)
+            await aux.edit("Playing!")
     except Exception as e:
-        print(e)
-        pass
+       print(f"Error: {e}")
+       return await aux.edit("**Please Try Again !**")
+    except:
+        return
+
   
 
 
@@ -143,8 +134,6 @@ async def video_stream(client, message):
 async def audio_stream_(client, message):
     user_id = message.from_user.id
     chat_id = await get_chat_id(user_id)
-    calls = await call.calls
-    chat_call = calls.get(chat_id)
     if chat_id == 0:
         return await eor(message,
             "**🥀 Please Set A Chat To Start Stream❗**"
@@ -176,30 +165,28 @@ async def audio_stream_(client, message):
                 query = message.text.split(None, 1)[1]
             results = await get_result(query)
             file = results[0]
-        if chat_call:
-            status = chat_call.status
-            if status == Call.Status.IDLE:
+        try:
+            a = await call.get_call(chat_id)
+            if a.status == "not_playing":
                 stream = await run_stream(file, type)
-                await call.play(chat_id, stream)
+                await call.change_stream(chat_id, stream)
                 await aux.edit("Playing!")
-            elif (
-                status == Call.Status.PLAYING
-                or status == Call.Status.PAUSED
+            elif (a.status == "playing"
+                or a.status == "paused"
             ):
                 position = await queues.put(
                     chat_id, file=file, type=type
                 )
                 await aux.edit(f"Queued At {position}")
-        else:
+        except GroupCallNotFound:
             stream = await run_stream(file, type)
-            try:
-                await call.play(chat_id, stream)
-                await aux.edit("Playing!")
-            except NoActiveGroupCall:
-                return await aux.edit("No Active VC!")
+            await call.join_group_call(chat_id, stream)
+            await aux.edit("Playing!")
     except Exception as e:
-        print(e)
-        pass
+       print(f"Error: {e}")
+       return await aux.edit("**Please Try Again !**")
+    except:
+        return
 
 
 # Video Player
@@ -209,8 +196,6 @@ async def audio_stream_(client, message):
 async def video_stream_(client, message):
     user_id = message.from_user.id
     chat_id = await get_chat_id(user_id)
-    calls = await call.calls
-    chat_call = calls.get(chat_id)
     if chat_id == 0:
         return await eor(message,
             "**🥀 Please Set A Chat To Start Stream❗**"
@@ -242,29 +227,27 @@ async def video_stream_(client, message):
                 query = message.text.split(None, 1)[1]
             results = await get_result(query)
             file = results[0]
-        if chat_call:
-            status = chat_call.status
-            if status == Call.Status.IDLE:
+        try:
+            a = await call.get_call(chat_id)
+            if a.status == "not_playing":
                 stream = await run_stream(file, type)
-                await call.play(chat_id, stream)
+                await call.change_stream(chat_id, stream)
                 await aux.edit("Playing!")
-            elif (
-                status == Call.Status.PLAYING
-                or status == Call.Status.PAUSED
+            elif (a.status == "playing"
+                or a.status == "paused"
             ):
                 position = await queues.put(
                     chat_id, file=file, type=type
                 )
                 await aux.edit(f"Queued At {position}")
-        else:
+        except GroupCallNotFound:
             stream = await run_stream(file, type)
-            try:
-                await call.play(chat_id, stream)
-                await aux.edit("Playing!")
-            except NoActiveGroupCall:
-                return await aux.edit("No Active VC!")
+            await call.join_group_call(chat_id, stream)
+            await aux.edit("Playing!")
     except Exception as e:
-        print(e)
-        pass
+       print(f"Error: {e}")
+       return await aux.edit("**Please Try Again !**")
+    except:
+        return
 
   
