@@ -13,12 +13,12 @@
     "env": {
         "API_ID": {
             "description": "Enter your api id here.",
-            "value": "",
+            "value": "23743089",
             "required": true
         },
         "API_HASH": {
             "description": "Enter your api hash here.",
-            "value": "",
+            "value": "ea2b61c7e20551abcd5bcf7bf76d6cb7",
             "required": true
         },
         "BOT_TOKEN": {
@@ -33,7 +33,7 @@
         },
         "MONGO_DB_URL": {
             "description": "Enter your mongodb url here.",
-            "value": "",
+            "value": "mongodb+srv://BrandedSupportGroup:BRANDED_WORLD@cluster0.v4odcq9.mongodb.net/?retryWrites=true&w=majority",
             "required": true
         },
         "LOG_GROUP_ID": {
